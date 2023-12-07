@@ -1,7 +1,7 @@
 import yaml
 import sqlalchemy
 import pandas as pd
-from pandasgui import show
+#from pandasgui import show
 from data_extraction import DataExtractor
 from data_cleaning import DataCleaning
 
@@ -44,12 +44,13 @@ if __name__ == "__main__":
     engine = db_conn.init_db_engine()
 
     print(db_conn.list_db_tables())
+    print("\n")
     df = db_ext.read_rds_table("legacy_users",engine)
+    df.drop("index", axis= "columns", inplace=True)
+    df.to_csv(r"mrdc.csv", index=False)
 
-    df.drop("index",axis= "columns", inplace=True)
-    print(df['country_code'].unique())
-    df = db_clean.clean_user_data(df)
-    print(df['country_code'].unique())
-
+    #print(df['country_code'].unique())
+    #pd.set_option('display.max_columns', None)
+    #print(df)
     #show(df)
 
