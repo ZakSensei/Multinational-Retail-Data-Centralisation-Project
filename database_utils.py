@@ -47,8 +47,9 @@ if __name__ == "__main__":
     print("\n")
     df = db_ext.read_rds_table("legacy_users",engine)
     df.drop("index", axis= "columns", inplace=True)
-    df.to_csv(r"mrdc.csv", index=False)
+    df.to_csv("mrdc.csv", index=False)
 
+    print(db_ext.retrieve_pdf_data())
     #print(df['country_code'].unique())
     #pd.set_option('display.max_columns', None)
     #print(df)
