@@ -1,5 +1,5 @@
 import pandas as pd
-from tabula import read_pdf
+import tabula
 
 class DataExtractor():
     """This is a utility class which helps extract data from different data sources including: 
@@ -10,5 +10,6 @@ class DataExtractor():
         return df
 
     def retrieve_pdf_data(self, link = "card_details.pdf"):
-        df = read_pdf(link)
+        card_details_csv = tabula.convert_into(link, "card_details.csv", output_format="csv", pages='all')
+        df = pd.read_csv(card_details_csv)
         return df
