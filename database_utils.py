@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     card_details_df = db_ext.retrieve_pdf_data()      #Converts card details into dataframe (df)
     df = db_ext.read_rds_table("legacy_users",engine) #converts {table_name} into dataframe
-    df.to_csv("mrdc.csv", index=False)                #converts the df to csv file 'mrdc.csv'
+    card_details_df.to_csv("mrdc.csv", index=False)   #converts the df to csv file 'mrdc.csv'
 
     df = db_clean.clean_user_data(df)                 #Cleans the dataframe
     db_conn.upload_to_db(df,'dim_users')              #uploads to local database
@@ -59,4 +59,5 @@ if __name__ == "__main__":
     # df['country_code'].replace('GBB', 'GB', inplace=True)
     # print(df['country_code'].unique())
     # print(df['country_code'].dtypes)
-
+    #unique_values = card_details_df['card_provider'].unique().tolist()
+    #print(unique_values)
