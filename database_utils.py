@@ -51,12 +51,12 @@ if __name__ == "__main__":
     db_conn.upload_to_db(df,'dim_users')              #uploads to local database
     
     print(f"{db_conn.list_db_tables()} \n")           #prints all table names in rds database
-    show(df)                                          #Gui of the dataframe
+    show(card_details_df)                             #Gui of the dataframe
 
 
-    #Testing Code
-    print(df['country_code'].unique())
-    df['country_code'].replace('GBB', 'GB', inplace=True)
-    print(df['country_code'].unique())
-    print(df['country_code'].dtypes)
+    # #Testing Code
+    # print(df['country_code'].unique())
+    # df['country_code'].replace('GBB', 'GB', inplace=True)
+    # print(df['country_code'].unique())
+    # print(df['country_code'].dtypes)
 
