@@ -43,7 +43,7 @@ class DataCleaning():
         users_df['email_address'] = users_df['email_address'].astype('string')
         users_df['address'] = users_df['address'].astype('string')
         users_df['country'] = users_df['country'].astype('category')
-        users_df['country_code'] = users_df['country_code'].astype('category')
+        users_df['country_code'] = users_df['country_code'].astype('string')
         users_df['phone_number'] = users_df['phone_number'].astype('string')
         users_df["join_date"] = pd.to_datetime(users_df["join_date"], infer_datetime_format=True, errors='coerce')
         users_df['user_uuid'] = users_df['user_uuid'].astype('string')
@@ -63,10 +63,11 @@ class DataCleaning():
     
     def clean_card_data(self,card_details_df):
 
-        # Remove the last 14 unique values in 'card_provider'
+        # Remove the last 14 values in 'card_provider which are mistakes'
         unique_card_providers = card_details_df['card_provider'].unique().tolist()
         card_providers_to_remove = unique_card_providers[-14:]
         card_details_df = card_details_df[~card_details_df['card_provider'].isin(card_providers_to_remove)].copy()
+
 
         # Remove duplicate rows
         card_details_df.drop_duplicates(inplace = True)
@@ -92,3 +93,57 @@ class DataCleaning():
         self.reset_index(card_details_df)
 
         return card_details_df
+
+    def clean_store_data(self, store_df):
+        """
+        Clean and preprocess store data in the given DataFrame.
+
+        Parameters:
+        - store_df (pd.DataFrame): DataFrame containing store data.
+
+        Returns:
+        - pd.DataFrame: Cleaned store data DataFrame.
+        """
+
+        # Drop unnecessary columns
+        store_df.drop('lat', axis=1, inplace=True)
+
+        # Remove null values
+        self.remove_null_values(store_df)
+
+        # Filter by country code
+        valid_country_codes = ["GB", "DE", "US"]
+        store_df = store_df[store_df['country_code'].isin(valid_country_codes)].copy()
+
+        # Filter by store types
+        valid_store_types = ["Super Store", "Web Portal", "Local"]
+        store_df = store_df[store_df['store_type'].isin(valid_store_types)].copy()
+
+        # Filter by continent
+        #FIXME replace eeEurope and eeAmerica
+        valid_continent_types = ["Europe", "America", "eeEurope", "eeAmerica"]
+        store_df = store_df[store_df['continent'].isin(valid_continent_types)].copy()
+
+        # Remove duplicate rows
+        store_df.drop_duplicates(inplace=True)
+
+        # Filter out wrongly formatted date values
+        date_values_to_remove = ['July 2015 14', 'May 2003 27', '2016 November 25', 'October 2006 04', 'February 2009 28']
+        store_df = store_df[~store_df['opening_date'].isin(date_values_to_remove)].copy()
+
+        # Convert opening date to datetime
+        store_df["opening_date"] = pd.to_datetime(store_df["opening_date"], infer_datetime_format=True, errors='coerce')
+
+        # Replace 'N/A' and empty values with NaN and drop NaN values
+        self.remove_null_values(store_df)
+
+        # Convert latitude and longitude to numeric, rounding to two decimal places
+        store_df['latitude'] = pd.to_numeric(store_df['latitude'], errors='coerce').round(2)
+        store_df['longitude'] = pd.to_numeric(store_df['longitude'], errors='coerce').round(2)
+
+        
+
+        # Reset index
+        self.reset_index(store_df)
+
+        return store_df

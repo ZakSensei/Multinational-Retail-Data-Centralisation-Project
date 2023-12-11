@@ -72,13 +72,13 @@ if __name__ == "__main__":
     db_clean = DataCleaning()
     db_conn = DatabaseConnector()
 
+    # Create database engine
+    engine = db_conn.init_db_engine()
+
     #Components connecting to API
     number_of_stores_endpoint = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores"
     api_headers = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
-    number_of_stores = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{store_number}"
-
-    # Create database engine
-    engine = db_conn.init_db_engine()
+    retrieve_store_endpoint = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details"
 
     # # Extract card details and convert to a DataFrame (df)
     # card_details_df = db_ext.retrieve_pdf_data()
@@ -103,6 +103,15 @@ if __name__ == "__main__":
     # # Show a graphical user interface (GUI) of the specified DataFrame
     # show(card_details_df)
 
-    db_ext.list_number_of_stores(number_of_stores_endpoint, api_headers)
+    #Components connecting to API
+    number_of_stores_endpoint = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores"
+    api_headers = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
+    retrieve_store_endpoint = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details"
+
+    number_of_stores = db_ext.list_number_of_stores(number_of_stores_endpoint, api_headers)
+    store_df = db_ext.retrieve_stores_data(retrieve_store_endpoint, number_of_stores, api_headers)
 
 
+    store_df.to_csv("mrdc.csv", index=False) 
+    store_df = db_clean.clean_store_data(store_df)
+    show(store_df)
