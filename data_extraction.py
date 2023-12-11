@@ -1,5 +1,6 @@
 import pandas as pd
 import tabula as tb
+import requests
 
 class DataExtractor():
     """This is a utility class which helps extract data from different data sources including: 
@@ -41,3 +42,29 @@ class DataExtractor():
         df.drop("index", axis="columns", inplace=True)
         
         return df
+
+    def list_number_of_stores(self, endpoint, header):      
+        """
+        Retrieve the number of stores using the given API endpoint and headers.
+
+        Parameters:
+        - endpoint (str): The API endpoint for retrieving the number of stores.
+        - headers (dict): The dictionary containing the headers for the API request.
+
+        Returns:
+        - int: The number of stores.
+        """
+        response = requests.get(endpoint, headers=header)
+        
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+        # Access the response data as JSON
+            number_of_stores = response.json()
+
+        # If the request was not successful, print the status code and response text
+        else:
+            print(f"Request failed with status code: {response.status_code}")
+            print(f"Response Text: {response.text}")
+        
+        return number_of_stores
+
