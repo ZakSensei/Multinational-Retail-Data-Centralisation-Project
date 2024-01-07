@@ -1,0 +1,41 @@
+-- Find the maximum length of the country_code column in dim_users
+SELECT MAX(LENGTH(country_code)) FROM dim_users;
+
+-- Modify the columns in dim_users table
+ALTER TABLE dim_users
+    ALTER COLUMN first_name TYPE VARCHAR (255),
+    ALTER COLUMN last_name TYPE VARCHAR (255),
+    ALTER COLUMN date_of_birth TYPE date USING date_of_birth::date,
+    ALTER COLUMN country_code TYPE CHAR(3),
+    ALTER COLUMN user_uuid TYPE UUID USING user_uuid::uuid,
+    ALTER COLUMN join_date TYPE date USING join_date::date;
+
+-- Find the maximum length of the card_number column in dim_card_details
+SELECT MAX(LENGTH(card_number)) FROM dim_card_details;
+
+-- Find the maximum length of the expiry_date column in dim_card_details
+SELECT MAX(LENGTH(expiry_date)) FROM dim_card_details;
+
+-- Modify the columns in dim_card_details table
+ALTER TABLE dim_card_details
+    ALTER COLUMN card_number TYPE VARCHAR(22),
+    ALTER COLUMN expiry_date TYPE VARCHAR(10);
+
+-- Set NOT NULL constraint for card_number column in dim_card_details
+ALTER TABLE dim_card_details
+    ALTER COLUMN card_number SET not null;
+
+-- Add a primary key constraint for card_number column in dim_card_details
+ALTER TABLE dim_card_details
+    ADD CONSTRAINT card_number_pk PRIMARY KEY (card_number);
+
+-- Add primary key constraints for other tables
+ALTER TABLE dim_users
+    ADD CONSTRAINT user_uuid_pk PRIMARY KEY (user_uuid);
+
+ALTER TABLE dim_date_times
+    ADD CONSTRAINT date_uuid_pk PRIMARY KEY (date_uuid);
+
+ALTER TABLE dim_products
+    ADD CONSTRAINT product_code_pk PRIMARY KEY (product_code);
+

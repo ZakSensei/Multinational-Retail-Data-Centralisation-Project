@@ -80,28 +80,28 @@ if __name__ == "__main__":
     api_headers = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
     retrieve_store_endpoint = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details"
 
-    # # Extract card details and convert to a DataFrame (df)
-    # card_details_df = db_ext.retrieve_pdf_data()
+    # Extract card details and convert to a DataFrame (df)
+    card_details_df = db_ext.retrieve_pdf_data()
 
-    # # Extract data from the "legacy_users" table and convert to a DataFrame
-    # users_df = db_ext.read_rds_table("legacy_users", engine)
+    # Extract data from the "legacy_users" table and convert to a DataFrame
+    users_df = db_ext.read_rds_table("legacy_users", engine)
 
-    # # Convert the card_details_df DataFrame to a CSV file 'mrdc.csv'
-    # card_details_df.to_csv("mrdc.csv", index=False)
+    # Convert the card_details_df DataFrame to a CSV file 'mrdc.csv'
+    card_details_df.to_csv("mrdc.csv", index=False)
 
-    # # Cleans the DataFrames
-    # users_df = db_clean.clean_user_data(users_df)
-    # card_details_df = db_clean.clean_card_data(card_details_df)
+    # Cleans the DataFrames
+    users_df = db_clean.clean_user_data(users_df)
+    card_details_df = db_clean.clean_card_data(card_details_df)
 
-    # # Upload the cleaned DataFrames to the sales_data Database
-    # db_conn.upload_to_db(users_df, 'dim_users')
-    # db_conn.upload_to_db(card_details_df, 'dim_card_details')
+    # Upload the cleaned DataFrames to the sales_data Database
+    db_conn.upload_to_db(users_df, 'dim_users')
+    db_conn.upload_to_db(card_details_df, 'dim_card_details')
 
-    # # Print table names in rds databases
-    # print(f"{db_conn.list_db_tables()} \n")
+    # Print table names in rds databases
+    print(f"{db_conn.list_db_tables()} \n")
 
-    # # Show a graphical user interface (GUI) of the specified DataFrame
-    # show(card_details_df)
+    # Show a graphical user interface (GUI) of the specified DataFrame
+    show(card_details_df)
 
     #Components connecting to API
     number_of_stores_endpoint = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores"
@@ -114,4 +114,4 @@ if __name__ == "__main__":
 
     store_df.to_csv("mrdc.csv", index=False) 
     store_df = db_clean.clean_store_data(store_df)
-    show(store_df)
+    #show(store_df)
